@@ -15,24 +15,21 @@ class SamaqApp extends StatefulWidget {
 class _SamaqAppState extends State<SamaqApp> {
   bool isDarkMode = true;
 
-  void toggleTheme() {
-    setState(() {
-      isDarkMode = !isDarkMode;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'SAMAQ',
+      title: 'SAMAQ TEAM',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: isDarkMode ? Brightness.dark : Brightness.light,
         scaffoldBackgroundColor: isDarkMode ? const Color(0xFF0F0F0F) : Colors.white,
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.blueAccent),
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.blueAccent, centerTitle: true),
       ),
-      home: HomeScreen(onThemeChanged: toggleTheme, isDarkMode: isDarkMode),
+      home: HomeScreen(
+        isDarkMode: isDarkMode,
+        onThemeChanged: () => setState(() => isDarkMode = !isDarkMode),
+      ),
     );
   }
 }
