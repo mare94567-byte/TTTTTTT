@@ -1,39 +1,76 @@
 import 'package:flutter/material.dart';
 
-class ReaderScreen extends StatelessWidget {
+class ReaderScreen extends StatefulWidget {
   const ReaderScreen({super.key});
 
   @override
+  _ReaderScreenState createState() => _ReaderScreenState();
+}
+
+class _ReaderScreenState extends State<ReaderScreen> {
+  int availableDownloads = 4; // رصيد التحميلات
+
+  void _handleDownload() {
+    if (availableDownloads > 0) {
+      setState(() => availableDownloads--);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("جاري التحميل... المتبقي لك $availableDownloads تحميلات مجانية"),
+          backgroundColor: Colors.blue,
+        ),
+      );
+    } else {
+      _showAdDialog();
+    }
+  }
+
+  void _showAdDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("انتهت التحميلات المجانية"),
+        content: const Text("شاهد إعلان فيديو قصير للحصول على (2) تحميل إضافي الآن؟"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("ليس الآن")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() => availableDownloads += 2);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("شكراً للمشاهدة! تمت إضافة 2 تحميل لرصيدك"), backgroundColor: Colors.green),
+              );
+            },
+            child: const Text("مشاهدة الإعلان", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // قائمة التفاعلات (الإيموجي)
     final List<String> reactions = ["😭", "✨", "💔", "🔥", "❤️", "😎", "😹", "😼"];
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("الفصل 1"), 
+        title: const Text("الفصل 1"),
         backgroundColor: Colors.blueGrey[900],
         actions: [
+          IconButton(icon: const Icon(Icons.file_download, color: Colors.blue), onPressed: _handleDownload),
           IconButton(icon: const Icon(Icons.share), onPressed: () {}),
         ],
       ),
       body: ListView(
         children: [
-          // عرض الصور مع العلامة المائية الزرقاء
-          for (int i = 1; i <= 5; i++)
+          for (int i = 1; i <= 3; i++)
             Stack(
               alignment: Alignment.bottomRight,
               children: [
-                // صورة الفصل (رابط تجريبي)
-                Image.network(
-                  'https://via.placeholder.com/500x800', 
-                  fit: BoxFit.width,
-                  width: double.infinity,
-                ),
-                // العلامة المائية الزرقاء
+                Image.network('https://via.placeholder.com/500x800', fit: BoxFit.width),
                 Positioned(
-                  bottom: 20,
-                  right: 20,
+                  bottom: 20, right: 20,
                   child: Text(
                     "SAMAQ - TEAM",
                     style: TextStyle(
@@ -46,100 +83,21 @@ class ReaderScreen extends StatelessWidget {
                 ),
               ],
             ),
-
-          const SizedBox(height: 30),
-
-          // --- قسم التفاعلات (Reactions) ---
+          const SizedBox(height: 20),
+          // قسم التفاعلات
           Container(
             padding: const EdgeInsets.all(20),
             color: Colors.grey[900],
-            child: Column(
-              children: [
-                const Text(
-                  "ما هو تقييمك لهذا الفصل؟",
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 15),
-                Wrap(
-                  spacing: 15,
-                  runSpacing: 10,
-                  alignment: WrapAlignment.center,
-                  children: reactions.map((emoji) => InkWell(
-                    onTap: () {
-                      // هنا سيتم تسجيل التفاعل لاحقاً
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("تم إضافة تفاعل: $emoji"), duration: const Duration(seconds: 1)),
-                      );
-                    },
-                    child: Text(emoji, style: const TextStyle(fontSize: 32)),
-                  )).toList(),
-                ),
-              ],
+            child: Wrap(
+              spacing: 15,
+              alignment: WrapAlignment.center,
+              children: reactions.map((e) => Text(e, style: const TextStyle(fontSize: 30))).toList(),
             ),
           ),
-
-          // --- قسم التعليقات (Comments) ---
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "التعليقات (12)",
-                  style: TextStyle(color: Colors.blueAccent, fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 15),
-                // حقل إضافة تعليق
-                const TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: "أكتب تعليقك هنا...",
-                    hintStyle: TextStyle(color: Colors.grey),
-                    suffixIcon: Icon(Icons.send, color: Colors.blue),
-                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // نموذج لتعليق مستخدم
-                _buildCommentItem("فاطمة", "الترجمة جداً رهيبة، عاشت إيدكم SAMAQ!", "منذ ساعتين"),
-                _buildCommentItem("أحمد", "بانتظار الفصل القادم بحماس!", "منذ 5 ساعات"),
-              ],
-            ),
-          ),
-          const SizedBox(height: 40), // مسافة في نهاية الصفحة
-        ],
-      ),
-    );
-  }
-
-  // دالة بناء شكل التعليق الواحد لترتيب الكود
-  Widget _buildCommentItem(String user, String comment, String time) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(backgroundColor: Colors.blueAccent, child: Icon(Icons.person, color: Colors.white)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(user, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                    Text(time, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Text(comment, style: const TextStyle(color: Colors.white70)),
-                TextButton(
-                  onPressed: () {}, 
-                  child: const Text("رد", style: TextStyle(color: Colors.blue, fontSize: 12))
-                ),
-              ],
-            ),
+          // قسم التعليقات التجريبي
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text("التعليقات...", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
