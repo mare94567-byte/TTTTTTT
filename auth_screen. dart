@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+
+class AuthScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("تسجيل الدخول")),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("مرحباً بك في SAMAQ", style: TextStyle(fontSize: 24, color: Colors.pink, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 30),
+            const TextField(decoration: InputDecoration(labelText: "البريد الإلكتروني", border: OutlineInputBorder())),
+            const SizedBox(height: 15),
+            const TextField(obscureText: true, decoration: InputDecoration(labelText: "كلمة السر", border: OutlineInputBorder())),
+            const SizedBox(height: 25),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50), backgroundColor: Colors.pink),
+              onPressed: () {
+                // سيتم ربطها بقاعدة بيانات Firebase لاحقاً
+                Navigator.pop(context);
+              },
+              child: const Text("دخول / تسجيل حساب جديد"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
