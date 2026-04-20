@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'publish_screen.dart';
 import 'my_works_screen.dart';
+import 'reader_screen.dart';
+import 'library_screen.dart';
+import 'auth_screen.dart'; // أضفت هذا لكي يعمل زر تسجيل الدخول
+
 class HomeScreen extends StatefulWidget {
   final VoidCallback onThemeChanged;
   final bool isDarkMode;
-  HomeScreen({required this.onThemeChanged, required this.isDarkMode});
+
+  const HomeScreen({required this.onThemeChanged, required this.isDarkMode});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -15,17 +20,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this, initialIndex: 2); // يبدأ بآخر الفصول
+    super.initState(); // تصحيح الكلمة من uper إلى super
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 2);
   }
 
-  @override
-  Widget build(BuildContext context) {
+  @override // تصحي_ح الكلمة من erride إلى override
+  Widget build(BuildContext context) { // تصحيح الكلمة من get إلى Widget
     return Scaffold(
       appBar: AppBar(
-        title: Text("SAMAQ", style: TextStyle(color: Colors.pinkAccent, fontWeight: FontWeight.bold)),
+        title: const Text("SAMAQ", style: TextStyle(color: Colors.pinkAccent, fontWeight: FontWeight.bold)),
         actions: [
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           IconButton(
             icon: Icon(widget.isDarkMode ? Icons.wb_sunny : Icons.nights_stay),
             onPressed: widget.onThemeChanged,
@@ -33,16 +38,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: [Tab(text: "التصنيفات"), Tab(text: "الأكثر شعبية"), Tab(text: "آخر الفصول")],
+          tabs: const [
+            Tab(text: "التصنيفات"),
+            Tab(text: "الأكثر شعبية"),
+            Tab(text: "آخر الفصول"),
+          ],
         ),
       ),
       drawer: buildDrawer(context),
       body: TabBarView(
         controller: _tabController,
         children: [
-          Center(child: Text("قائمة التصنيفات")),
-          Center(child: Text("الأعمال الأكثر شعبية")),
-          buildMangaGrid(), // عرض الأعمال 3 في كل سطر
+          const Center(child: Text("قائمة التصنيفات")),
+          const Center(child: Text("الأعمال الأكثر شعبية")),
+          buildMangaGrid(),
         ],
       ),
     );
@@ -50,16 +59,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   Widget buildMangaGrid() {
     return GridView.builder(
-      padding: EdgeInsets.all(10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, childAspectRatio: 0.6, crossAxisSpacing: 10, mainAxisSpacing: 10,
+      padding: const EdgeInsets.all(10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 0.6,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
       ),
       itemCount: 9,
       itemBuilder: (context, index) => Column(
         children: [
-          Expanded(child: Container(color: Colors.grey[800], child: Icon(Icons.image))),
-          Text("اسم المانهوا", style: TextStyle(fontSize: 12)),
-          Text("جديد", style: TextStyle(fontSize: 10, color: Colors.green)),
+          Expanded(child: Container(color: Colors.grey[800], child: const Icon(Icons.image))),
+          const Text("اسم المانهوا", style: TextStyle(fontSize: 12)),
+          const Text("جديد", style: TextStyle(fontSize: 10, color: Colors.green)),
         ],
       ),
     );
@@ -77,17 +89,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.login),
+            title: const Text("تسجيل الدخول"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthScreen()));
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.library_books),
             title: const Text("المكتبة"),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => LibraryScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LibraryScreen()));
             },
-          ),
-          ListTile(
-            leading: const Icon(Icons.history),
-            title: const Text("سجل المشاهدة"),
-            onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.cloud_upload),
@@ -98,12 +113,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             },
           ),
           ListTile(
-            leading: const Icon(Icons.palette), // أيقونة "أعمالي"
+            leading: const Icon(Icons.palette),
             title: const Text("أعمالي"),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => MyWorksScreen()));
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text("سجل المشاهدة"),
+            onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.download),
@@ -114,4 +134,4 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ),
     );
   }
-} // تأكدي من وجود هذا القوس لإغلاق الكلاس الأساسي 
+}
