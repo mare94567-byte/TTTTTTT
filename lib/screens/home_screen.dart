@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'publish_screen.dart';
-
+import 'my_works_screen.dart';
 class HomeScreen extends StatefulWidget {
   final VoidCallback onThemeChanged;
   final bool isDarkMode;
@@ -69,13 +69,49 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(decoration: BoxDecoration(color: Colors.pinkAccent), child: Text("SAMAQ MENU")),
-          ListTile(leading: Icon(Icons.cloud_upload), title: Text("انشر أعمالك"), 
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PublishScreen()))),
-          ListTile(leading: Icon(Icons.download), title: Text("التحميلات")),
-          ListTile(leading: Icon(Icons.history), title: Text("سجل المشاهدة")),
+          const DrawerHeader(
+            decoration: BoxDecoration(color: Colors.pinkAccent),
+            child: Center(
+              child: Text("SAMAQ APP", 
+                style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.library_books),
+            title: const Text("المكتبة"),
+            onTap: () {
+              Navigator.pop(context);
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => LibraryScreen()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text("سجل المشاهدة"),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.cloud_upload),
+            title: const Text("انشر أعمالك"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PublishScreen()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.palette), // أيقونة "أعمالي"
+            title: const Text("أعمالي"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyWorksScreen()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.download),
+            title: const Text("التحميلات"),
+            onTap: () {},
+          ),
         ],
       ),
     );
   }
-}
+} // تأكدي من وجود هذا القوس لإغلاق الكلاس الأساسي 
