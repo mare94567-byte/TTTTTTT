@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+
+class LibraryScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        app_bar: AppBar(
+          title: const Text("المكتبة"),
+          backgroundColor: Colors.pinkAccent,
+          bottom: const TabBar(
+            tabs: [Tab(text: "المفضلة"), Tab(text: "لاحقاً"), Tab(text: "أقرأها الآن")],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            Center(child: Text("قائمة المفضلة فارغة حالياً")),
+            Center(child: Text("لا توجد أعمال في قائمة لاحقاً")),
+            Center(child: Text("ابدأ القراءة لتظهر أعمالك هنا")),
+          ],
+        ),
+      ),
+    );
+  }
+}
