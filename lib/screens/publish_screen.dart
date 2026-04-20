@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PublishScreen extends StatefulWidget {
+  const PublishScreen({super.key});
+
   @override
   _PublishScreenState createState() => _PublishScreenState();
 }
@@ -8,53 +10,46 @@ class PublishScreen extends StatefulWidget {
 class _PublishScreenState extends State<PublishScreen> {
   String status = 'مستمر';
   List<String> selectedCategories = [];
-  final List<String> allCategories = ["أكشن", "مانهوا", "مانجا", "رومانسية", "خيال", "دراما", "تاريخي"];
+  final List<String> categories = ["أكشن", "رومانسية", "خيال", "تاريخي", "دراما", "مانهوا"];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("نشر عمل جديد"), backgroundColor: Colors.pinkAccent),
+      appBar: AppBar(title: const Text("نشر عمل جديد"), backgroundColor: Colors.blueAccent),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildTextField("اسم العمل (بالعربي أو الانكليزي)"),
-            _buildTextField("أسماء أخرى للعمل"),
-            _buildTextField("اسم المترجم"),
-            _buildTextField("اسم المؤلف (اختياري)"),
-            _buildTextField("وصف المانهوا / القصة", maxLines: 3),
-            const SizedBox(height: 15),
+            _buildInput("اسم المانهوا"),
+            _buildInput("اسم المترجم"),
+            _buildInput("قصة العمل", maxLines: 3),
+            const SizedBox(height: 20),
             const Text("الحالة:", style: TextStyle(fontWeight: FontWeight.bold)),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: ["مستمر", "مكتمل", "متوقف"].map((s) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: ["مستمر", "مكتمل"].map((s) => Row(
                 children: [
                   Radio(value: s, groupValue: status, onChanged: (v) => setState(() => status = v.toString())),
                   Text(s),
                 ],
               )).toList(),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             const Text("التصنيفات:", style: TextStyle(fontWeight: FontWeight.bold)),
             Wrap(
               spacing: 8,
-              children: allCategories.map((cat) => FilterChip(
+              children: categories.map((cat) => FilterChip(
                 label: Text(cat),
                 selected: selectedCategories.contains(cat),
+                selectedColor: Colors.blue.withOpacity(0.3),
                 onSelected: (val) => setState(() => val ? selectedCategories.add(cat) : selectedCategories.remove(cat)),
               )).toList(),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.add_a_photo),
-              label: const Text("رفع صورة الغلاف من الاستوديو"),
-              onPressed: () {}, 
-            ),
             const SizedBox(height: 30),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, minimumSize: const Size(double.infinity, 50)),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, minimumSize: const Size(double.infinity, 50)),
               onPressed: () => Navigator.pop(context),
-              child: const Text("نشر العمل الآن", style: TextStyle(color: Colors.white, fontSize: 18)),
+              child: const Text("نشر الآن", style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -62,8 +57,8 @@ class _PublishScreenState extends State<PublishScreen> {
     );
   }
 
-  Widget _buildTextField(String label, {int maxLines = 1}) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
+  Widget _buildInput(String label, {int maxLines = 1}) => Padding(
+    padding: const EdgeInsets.only(bottom: 15),
     child: TextField(maxLines: maxLines, decoration: InputDecoration(labelText: label, border: const OutlineInputBorder())),
   );
 }
